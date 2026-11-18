@@ -39,6 +39,7 @@ export default function Layout() {
         <Link to="/">Mesas</Link>
         <Link to="/mesas/nova">Criar mesa</Link>
         <Link to="/agenda">Minha agenda</Link>
+        <Link to="/personagens">Meus personagens</Link>
         <span className="espaco" />
         <span>Olá, {usuario.nome}</span>
         <button className="tema" onClick={alternarTema}>

@@ -199,3 +199,78 @@ textarea {
   gap: 4px;
   font-size: 14px;
 }
+.atributos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+
+.atributo {
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  background: var(--cartao);
+}
+
+.atributo .rotulo {
+  font-size: 12px;
+  color: var(--texto-suave);
+}
+
+.atributo .mod {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.atributo input {
+  width: 64px;
+  text-align: center;
+}
+
+.atributo button {
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.barra {
+  height: 12px;
+  background: var(--borda);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.barra > div {
+  height: 100%;
+  background: var(--ok);
+}
+
+.linha {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.linha input[type="number"] {
+  width: 80px;
+}
+
+.rolagem {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--etiqueta-fundo);
+  color: var(--etiqueta-texto);
+  margin: 8px 0;
+}
+
+.item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+}

@@ -125,7 +125,11 @@ export default function MesaDetalhe() {
             Inscrever-se
           </button>
         )}
-
+        {(mesa.souMestre || mesa.inscrito) && (
+          <p>
+            <Link to={`/mesas/${id}/personagens`}>Ver personagens da mesa</Link>
+          </p>
+        )}
         {mensagem && <p className="ok">{mensagem}</p>}
         {erro && <p className="erro">{erro}</p>}
       </div>
