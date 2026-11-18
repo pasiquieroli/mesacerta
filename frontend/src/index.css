@@ -82,3 +82,48 @@ textarea {
 .ok {
   color: seagreen;
 }
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cartao h3 {
+  margin: 0 0 4px;
+}
+
+.cartao .info {
+  color: #555;
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  background: #e8dcff;
+  color: #3b2a50;
+  margin-right: 6px;
+}
+
+.etiqueta.lotada {
+  background: #f5c6c0;
+  color: #7a1d12;
+}
+
+.formulario {
+  display: grid;
+  gap: 10px;
+  max-width: 480px;
+}
+
+.formulario label {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+}
