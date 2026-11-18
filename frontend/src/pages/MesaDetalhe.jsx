@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
 function formatarData(iso) {
@@ -11,6 +11,7 @@ function formatarData(iso) {
 
 export default function MesaDetalhe() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [mesa, setMesa] = useState(null);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
@@ -57,10 +58,26 @@ export default function MesaDetalhe() {
     setOcupado(false);
   }
 
+  async function excluir() {
+    const confirmado = window.confirm(
+      "Excluir esta mesa? Isso apaga também inscrições, personagens e sessões."
+    );
+    if (!confirmado) return;
+    setErro("");
+    setOcupado(true);
+    try {
+      await api.delete(`/mesas/${id}`);
+      navigate("/");
+    } catch (err) {
+      setErro(err.response?.data?.erro || "Erro ao excluir a mesa");
+      setOcupado(false);
+    }
+  }
+
   if (!mesa) {
     return (
       <div>
-        <Link to="/">Voltar</Link>
+        <Link to="/">&larr; Voltar</Link>
         {erro ? <p className="erro">{erro}</p> : <p>Carregando...</p>}
       </div>
     );
@@ -90,16 +107,24 @@ export default function MesaDetalhe() {
         <p className="info">Quando: {formatarData(mesa.dataHora)}</p>
         <p>{mesa.descricao}</p>
 
-        {!mesa.souMestre &&
-          (mesa.inscrito ? (
-            <button className="perigo" onClick={cancelar} disabled={ocupado}>
-              Cancelar inscrição
+        {mesa.souMestre ? (
+          <div className="filtros">
+            <button onClick={() => navigate(`/mesas/${id}/editar`)} disabled={ocupado}>
+              Editar mesa
             </button>
-          ) : (
-            <button onClick={inscrever} disabled={ocupado}>
-              Inscrever-se
+            <button className="perigo" onClick={excluir} disabled={ocupado}>
+              Excluir mesa
             </button>
-          ))}
+          </div>
+        ) : mesa.inscrito ? (
+          <button className="perigo" onClick={cancelar} disabled={ocupado}>
+            Cancelar inscrição
+          </button>
+        ) : (
+          <button onClick={inscrever} disabled={ocupado}>
+            Inscrever-se
+          </button>
+        )}
 
         {mensagem && <p className="ok">{mensagem}</p>}
         {erro && <p className="erro">{erro}</p>}
