@@ -48,10 +48,64 @@ function responder(config, status, data) {
   return Promise.resolve(resposta);
 }
 
+function atualizarMesa(id, mudancas) {
+  mesasMock = mesasMock.map((m) => (m.id === id ? { ...m, ...mudancas } : m));
+}
+
 function adaptadorMock(config) {
   const metodo = config.method.toLowerCase();
+  const url = config.url;
 
-  if (metodo === "get") {
+  // /mesas/:id/inscricao
+  const insc = url.match(/^\/mesas\/(\d+)\/inscricao$/);
+  if (insc) {
+    const id = Number(insc[1]);
+    const mesa = mesasMock.find((m) => m.id === id);
+    if (!mesa) return responder(config, 404, { erro: "Mesa não encontrada" });
+
+    if (metodo === "post") {
+      if (mesa.souMestre) {
+        return responder(config, 400, {
+          erro: "O mestre não pode se inscrever na própria mesa",
+        });
+      }
+      if (mesa.inscrito) {
+        return responder(config, 409, { erro: "Você já está inscrito nesta mesa" });
+      }
+      if (mesa.vagasRestantes <= 0) {
+        return responder(config, 409, { erro: "Mesa lotada" });
+      }
+      atualizarMesa(id, {
+        inscrito: true,
+        vagasOcupadas: mesa.vagasOcupadas + 1,
+        vagasRestantes: mesa.vagasRestantes - 1,
+      });
+      return responder(config, 201, { mesaId: id, status: "confirmada" });
+    }
+
+    if (metodo === "delete") {
+      if (!mesa.inscrito) {
+        return responder(config, 404, { erro: "Você não está inscrito nesta mesa" });
+      }
+      atualizarMesa(id, {
+        inscrito: false,
+        vagasOcupadas: mesa.vagasOcupadas - 1,
+        vagasRestantes: mesa.vagasRestantes + 1,
+      });
+      return responder(config, 204, null);
+    }
+  }
+
+  // /mesas/:id
+  const uma = url.match(/^\/mesas\/(\d+)$/);
+  if (uma && metodo === "get") {
+    const mesa = mesasMock.find((m) => m.id === Number(uma[1]));
+    if (!mesa) return responder(config, 404, { erro: "Mesa não encontrada" });
+    return responder(config, 200, mesa);
+  }
+
+  // /mesas
+  if (url === "/mesas" && metodo === "get") {
     const { sistema, data } = config.params || {};
     let lista = mesasMock;
     if (sistema) {
@@ -67,7 +121,7 @@ function adaptadorMock(config) {
     return responder(config, 200, lista);
   }
 
-  if (metodo === "post") {
+  if (url === "/mesas" && metodo === "post") {
     const corpo = JSON.parse(config.data);
     if (!corpo.titulo || !corpo.sistema || !corpo.descricao || !corpo.dataHora) {
       return responder(config, 400, {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import { Link } from "react-router-dom";
 
 function formatarData(iso) {
   return new Date(iso).toLocaleString("pt-BR", {
@@ -67,7 +68,9 @@ export default function Home() {
 
       {mesas.map((mesa) => (
         <div className="cartao" key={mesa.id}>
-          <h3>{mesa.titulo}</h3>
+          <h3>
+              <Link to={`/mesas/${mesa.id}`}>{mesa.titulo}</Link>
+          </h3>
           <p className="info">
             <span className="etiqueta">{mesa.sistema}</span>
             {mesa.vagasRestantes === 0 ? (

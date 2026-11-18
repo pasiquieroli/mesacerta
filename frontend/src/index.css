@@ -127,3 +127,12 @@ textarea {
   gap: 4px;
   font-size: 14px;
 }
+
+.cartao h3 a {
+  color: #3b2a50;
+  text-decoration: none;
+}
+
+.cartao h3 a:hover {
+  text-decoration: underline;
+}
