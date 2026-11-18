@@ -50,7 +50,7 @@ export default function Login() {
         />
         <button type="submit">{modoCadastro ? "Cadastrar" : "Entrar"}</button>
       </form>
-      {erro && <p style={{ color: "crimson" }}>{erro}</p>}
+      {erro && <p className="erro">{erro}</p>}
       <p>
         <button type="button" onClick={() => setModoCadastro(!modoCadastro)}>
           {modoCadastro ? "Já tenho conta" : "Quero me cadastrar"}
