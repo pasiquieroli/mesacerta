@@ -56,6 +56,14 @@ function adaptadorMock(config) {
   const metodo = config.method.toLowerCase();
   const url = config.url;
 
+    // /me/agenda
+  if (url === "/me/agenda" && metodo === "get") {
+    const minhas = mesasMock
+      .filter((m) => m.inscrito || m.souMestre)
+      .sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora))
+      .map((m) => ({ ...m, papel: m.souMestre ? "mestre" : "jogador" }));
+    return responder(config, 200, minhas);
+  }
   // /mesas/:id/inscricao
   const insc = url.match(/^\/mesas\/(\d+)\/inscricao$/);
   if (insc) {
@@ -158,7 +166,10 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
 
   // Só as rotas /mesas são simuladas; login e /auth/me usam o backend real
-  if (USAR_MOCK && config.url.startsWith("/mesas")) {
+    if (
+    USAR_MOCK &&
+    (config.url.startsWith("/mesas") || config.url.startsWith("/me/agenda"))
+  ) {
     config.adapter = adaptadorMock;
   }
   return config;
